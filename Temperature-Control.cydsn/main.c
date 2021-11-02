@@ -1,18 +1,18 @@
 /* ========================================
  *
- * Copyright YOUR COMPANY, THE YEAR
- * All Rights Reserved
- * UNPUBLISHED, LICENSED SOFTWARE.
- *
- * CONFIDENTIAL AND PROPRIETARY INFORMATION
- * WHICH IS THE PROPERTY OF your company.
+ * Has not been separated into multiple .c and .h files,
+ * because of code simplicity.
+ * 
+ * Could have been separated into I2C and UART Sections.
+ * 
+ * 
+ * Author: Malthe Petersen
  *
  * ========================================
 */
 #include <stdio.h>
 #include "project.h"
 #include "PIDControl.h"
-#include "I2C.h"
 #define LM75_ADDRESS (0x48)
 #define SAMPLES_PER_SECOND 3
 
@@ -59,16 +59,17 @@ int main(void)
     {
         //Gets temperature from LM75
         temp = getTemp();
-        
+        //Setting error based on temp.
         float error = setPoint - temp;
         float proportionalPart = 0;
         float integralPart = 0;
         float derivativePart = 0;
-        
+        //Calculate next step
         controlSignal = PIDControl_doStep(temp, &proportionalPart, &integralPart, &derivativePart);            
         snprintf(outputBuffer, sizeof(outputBuffer), "%f, %f, %f, %f, %f, %f, %f, %f, %f, %f \r\n", 
                                                       setPoint, temp, error, controlSignal, Kp, Ki, Kd, 
                                                       proportionalPart, integralPart, derivativePart);
+        //PWM defined as %, therefor limited to 0-100%
         if(controlSignal > 100){
             controlSignal = 100;
         }
@@ -112,22 +113,25 @@ void handleByteReceived(uint8_t byteReceived)
 }
 void Read2Bytes(uint8_t addr, uint8_t data[])
 {
-    uint8_t status;
+    //I2C Communication
+    uint8_t response;
     I2C_MasterClearStatus();
-    status = I2C_MasterSendStart(LM75_ADDRESS, I2C_WRITE_XFER_MODE) ;
-    
-    if (I2C_MSTR_NO_ERROR == status) {
+    //I2C Start
+    response = I2C_MasterSendStart(LM75_ADDRESS, I2C_WRITE_XFER_MODE) ;
+    //Making sure there was no error in request
+    if (I2C_MSTR_NO_ERROR == response) {
         I2C_MasterWriteByte(addr); 
         I2C_MasterSendRestart(LM75_ADDRESS, I2C_READ_XFER_MODE);  
     }
     
-    if (I2C_MSTR_NO_ERROR == status) {   
+    if (I2C_MSTR_NO_ERROR == response) {   
         data[0] = I2C_MasterReadByte(I2C_ACK_DATA); // Integer
         data[1] = I2C_MasterReadByte(I2C_NAK_DATA); // Fraction
     }
+    //I2C Stop
     I2C_MasterSendStop(); 
 }
-
+//Fires Read2Bytes(), then formats response and returns it.
 float getTemp(void){
     Read2Bytes(addr, responseData);
     float temp  = (float)(((responseData[0] << 8) | responseData[1]) >> 5) * 0.125;
@@ -135,15 +139,17 @@ float getTemp(void){
 }
 
 void increaseTemp(){
+    //Increases setPoint by 5, changes it in the PID controller and outputs to UART.
     setPoint = setPoint + 5;
     UART_1_PutString(printf("TARGET TEMP CHANGED TO: %s\r\n", gcvt(setPoint,2,str)));
     PIDControl_changeSetPoint(setPoint);
 }
 void decreaseTemp(){
+    //Decreases setPoint by 5, changes it in the PID controller and outputs to UART.
     setPoint = setPoint - 5;
     UART_1_PutString(printf("TARGET TEMP CHANGED TO: %s\r\n", gcvt(setPoint,2,str)));
     PIDControl_changeSetPoint(setPoint);
 }
-    //I2C Communication
+    
 
 /* [] END OF FILE */
