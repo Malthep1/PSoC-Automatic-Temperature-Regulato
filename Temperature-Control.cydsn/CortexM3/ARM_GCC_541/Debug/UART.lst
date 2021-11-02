@@ -1,0 +1,856 @@
+ARM GAS  C:\Users\Malth\AppData\Local\Temp\ccjzx5MJ.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"UART.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.ISR_UART_rx_handler,"ax",%progbits
+  20              		.align	2
+  21              		.global	ISR_UART_rx_handler
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	ISR_UART_rx_handler, %function
+  25              	ISR_UART_rx_handler:
+  26              	.LFB64:
+  27              		.file 1 "UART.c"
+   1:UART.c        **** /* ========================================
+   2:UART.c        ****  *
+   3:UART.c        ****  * Copyright YOUR COMPANY, THE YEAR
+   4:UART.c        ****  * All Rights Reserved
+   5:UART.c        ****  * UNPUBLISHED, LICENSED SOFTWARE.
+   6:UART.c        ****  *
+   7:UART.c        ****  * CONFIDENTIAL AND PROPRIETARY INFORMATION
+   8:UART.c        ****  * WHICH IS THE PROPERTY OF your company.
+   9:UART.c        ****  *
+  10:UART.c        ****  * ========================================
+  11:UART.c        **** */
+  12:UART.c        **** 
+  13:UART.c        **** #include <stdio.h>
+  14:UART.c        **** #include "UART.h"
+  15:UART.c        **** #include "project.h"
+  16:UART.c        **** 
+  17:UART.c        **** CY_ISR_PROTO(ISR_UART_rx_handler);
+  18:UART.c        **** void handleByteReceived(uint8_t byteReceived);
+  19:UART.c        **** 
+  20:UART.c        **** CY_ISR(ISR_UART_rx_handler)
+  21:UART.c        **** {
+  28              		.loc 1 21 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 10B5     		push	{r4, lr}
+  33              		.cfi_def_cfa_offset 8
+  34              		.cfi_offset 4, -8
+  35              		.cfi_offset 14, -4
+  22:UART.c        ****     uint8_t bytesToRead = UART_1_GetRxBufferSize();
+ARM GAS  C:\Users\Malth\AppData\Local\Temp\ccjzx5MJ.s 			page 2
+
+
+  36              		.loc 1 22 0
+  37 0002 FFF7FEFF 		bl	UART_1_GetRxBufferSize
+  38              	.LVL0:
+  39 0006 0446     		mov	r4, r0
+  40              	.LVL1:
+  23:UART.c        ****     while (bytesToRead > 0)
+  41              		.loc 1 23 0
+  42 0008 05E0     		b	.L2
+  43              	.L3:
+  44              	.LBB2:
+  24:UART.c        ****     {
+  25:UART.c        ****         uint8_t byteReceived = UART_1_ReadRxData();
+  45              		.loc 1 25 0
+  46 000a FFF7FEFF 		bl	UART_1_ReadRxData
+  47              	.LVL2:
+  26:UART.c        ****         UART_1_WriteTxData(byteReceived); // echo back
+  48              		.loc 1 26 0
+  49 000e FFF7FEFF 		bl	UART_1_WriteTxData
+  50              	.LVL3:
+  27:UART.c        ****         
+  28:UART.c        ****         handleByteReceived(byteReceived);
+  29:UART.c        ****         
+  30:UART.c        ****         bytesToRead--;
+  51              		.loc 1 30 0
+  52 0012 013C     		subs	r4, r4, #1
+  53              	.LVL4:
+  54 0014 E4B2     		uxtb	r4, r4
+  55              	.LVL5:
+  56              	.L2:
+  57              	.LBE2:
+  23:UART.c        ****     {
+  58              		.loc 1 23 0
+  59 0016 002C     		cmp	r4, #0
+  60 0018 F7D1     		bne	.L3
+  31:UART.c        ****     }
+  32:UART.c        **** }
+  61              		.loc 1 32 0
+  62 001a 10BD     		pop	{r4, pc}
+  63              		.cfi_endproc
+  64              	.LFE64:
+  65              		.size	ISR_UART_rx_handler, .-ISR_UART_rx_handler
+  66              		.section	.text.initUART,"ax",%progbits
+  67              		.align	2
+  68              		.global	initUART
+  69              		.thumb
+  70              		.thumb_func
+  71              		.type	initUART, %function
+  72              	initUART:
+  73              	.LFB65:
+  33:UART.c        **** void initUART(){
+  74              		.loc 1 33 0
+  75              		.cfi_startproc
+  76              		@ args = 0, pretend = 0, frame = 0
+  77              		@ frame_needed = 0, uses_anonymous_args = 0
+  78 0000 08B5     		push	{r3, lr}
+  79              		.cfi_def_cfa_offset 8
+  80              		.cfi_offset 3, -8
+ARM GAS  C:\Users\Malth\AppData\Local\Temp\ccjzx5MJ.s 			page 3
+
+
+  81              		.cfi_offset 14, -4
+  34:UART.c        ****         isr_uart_rx_StartEx(ISR_UART_rx_handler);   
+  82              		.loc 1 34 0
+  83 0002 0248     		ldr	r0, .L7
+  84 0004 FFF7FEFF 		bl	isr_uart_rx_StartEx
+  85              	.LVL6:
+  86 0008 08BD     		pop	{r3, pc}
+  87              	.L8:
+  88 000a 00BF     		.align	2
+  89              	.L7:
+  90 000c 00000000 		.word	ISR_UART_rx_handler
+  91              		.cfi_endproc
+  92              	.LFE65:
+  93              		.size	initUART, .-initUART
+  94              		.section	.text.handleByteReceived,"ax",%progbits
+  95              		.align	2
+  96              		.global	handleByteReceived
+  97              		.thumb
+  98              		.thumb_func
+  99              		.type	handleByteReceived, %function
+ 100              	handleByteReceived:
+ 101              	.LFB66:
+  35:UART.c        **** }
+  36:UART.c        **** // Main DC-Motor controll
+  37:UART.c        **** void handleByteReceived(uint8_t byteReceived)
+  38:UART.c        **** {
+ 102              		.loc 1 38 0
+ 103              		.cfi_startproc
+ 104              		@ args = 0, pretend = 0, frame = 0
+ 105              		@ frame_needed = 0, uses_anonymous_args = 0
+ 106              		@ link register save eliminated.
+ 107              	.LVL7:
+ 108 0000 7047     		bx	lr
+ 109              		.cfi_endproc
+ 110              	.LFE66:
+ 111              		.size	handleByteReceived, .-handleByteReceived
+ 112 0002 00BF     		.text
+ 113              	.Letext0:
+ 114              		.file 2 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 115              		.file 3 "c:\\program files (x86)\\cypress\\psoc creator\\4.2\\psoc creator\\import\\gnu\\arm\\5.4.
+ 116              		.file 4 "Generated_Source\\PSoC5/UART_1.h"
+ 117              		.file 5 "Generated_Source\\PSoC5/core_cm3.h"
+ 118              		.section	.debug_info,"",%progbits
+ 119              	.Ldebug_info0:
+ 120 0000 AE010000 		.4byte	0x1ae
+ 121 0004 0400     		.2byte	0x4
+ 122 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 123 000a 04       		.byte	0x4
+ 124 000b 01       		.uleb128 0x1
+ 125 000c 5B000000 		.4byte	.LASF26
+ 126 0010 0C       		.byte	0xc
+ 127 0011 64010000 		.4byte	.LASF27
+ 128 0015 AE010000 		.4byte	.LASF28
+ 129 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 130 001d 00000000 		.4byte	0
+ 131 0021 00000000 		.4byte	.Ldebug_line0
+ 132 0025 02       		.uleb128 0x2
+ARM GAS  C:\Users\Malth\AppData\Local\Temp\ccjzx5MJ.s 			page 4
+
+
+ 133 0026 01       		.byte	0x1
+ 134 0027 06       		.byte	0x6
+ 135 0028 3E020000 		.4byte	.LASF0
+ 136 002c 03       		.uleb128 0x3
+ 137 002d 14000000 		.4byte	.LASF4
+ 138 0031 02       		.byte	0x2
+ 139 0032 1D       		.byte	0x1d
+ 140 0033 37000000 		.4byte	0x37
+ 141 0037 02       		.uleb128 0x2
+ 142 0038 01       		.byte	0x1
+ 143 0039 08       		.byte	0x8
+ 144 003a 4D000000 		.4byte	.LASF1
+ 145 003e 02       		.uleb128 0x2
+ 146 003f 02       		.byte	0x2
+ 147 0040 05       		.byte	0x5
+ 148 0041 1F020000 		.4byte	.LASF2
+ 149 0045 02       		.uleb128 0x2
+ 150 0046 02       		.byte	0x2
+ 151 0047 07       		.byte	0x7
+ 152 0048 28000000 		.4byte	.LASF3
+ 153 004c 03       		.uleb128 0x3
+ 154 004d 1E000000 		.4byte	.LASF5
+ 155 0051 02       		.byte	0x2
+ 156 0052 3F       		.byte	0x3f
+ 157 0053 57000000 		.4byte	0x57
+ 158 0057 02       		.uleb128 0x2
+ 159 0058 04       		.byte	0x4
+ 160 0059 05       		.byte	0x5
+ 161 005a 29020000 		.4byte	.LASF6
+ 162 005e 02       		.uleb128 0x2
+ 163 005f 04       		.byte	0x4
+ 164 0060 07       		.byte	0x7
+ 165 0061 F2000000 		.4byte	.LASF7
+ 166 0065 02       		.uleb128 0x2
+ 167 0066 08       		.byte	0x8
+ 168 0067 05       		.byte	0x5
+ 169 0068 0C020000 		.4byte	.LASF8
+ 170 006c 02       		.uleb128 0x2
+ 171 006d 08       		.byte	0x8
+ 172 006e 07       		.byte	0x7
+ 173 006f 78010000 		.4byte	.LASF9
+ 174 0073 04       		.uleb128 0x4
+ 175 0074 04       		.byte	0x4
+ 176 0075 05       		.byte	0x5
+ 177 0076 696E7400 		.ascii	"int\000"
+ 178 007a 02       		.uleb128 0x2
+ 179 007b 04       		.byte	0x4
+ 180 007c 07       		.byte	0x7
+ 181 007d 6B010000 		.4byte	.LASF10
+ 182 0081 02       		.uleb128 0x2
+ 183 0082 08       		.byte	0x8
+ 184 0083 04       		.byte	0x4
+ 185 0084 32020000 		.4byte	.LASF11
+ 186 0088 02       		.uleb128 0x2
+ 187 0089 04       		.byte	0x4
+ 188 008a 07       		.byte	0x7
+ 189 008b 03020000 		.4byte	.LASF12
+ARM GAS  C:\Users\Malth\AppData\Local\Temp\ccjzx5MJ.s 			page 5
+
+
+ 190 008f 02       		.uleb128 0x2
+ 191 0090 01       		.byte	0x1
+ 192 0091 08       		.byte	0x8
+ 193 0092 1A020000 		.4byte	.LASF13
+ 194 0096 03       		.uleb128 0x3
+ 195 0097 8F010000 		.4byte	.LASF14
+ 196 009b 03       		.byte	0x3
+ 197 009c 18       		.byte	0x18
+ 198 009d 2C000000 		.4byte	0x2c
+ 199 00a1 03       		.uleb128 0x3
+ 200 00a2 FB010000 		.4byte	.LASF15
+ 201 00a6 03       		.byte	0x3
+ 202 00a7 2C       		.byte	0x2c
+ 203 00a8 4C000000 		.4byte	0x4c
+ 204 00ac 02       		.uleb128 0x2
+ 205 00ad 04       		.byte	0x4
+ 206 00ae 04       		.byte	0x4
+ 207 00af 47000000 		.4byte	.LASF16
+ 208 00b3 02       		.uleb128 0x2
+ 209 00b4 08       		.byte	0x8
+ 210 00b5 04       		.byte	0x4
+ 211 00b6 49010000 		.4byte	.LASF17
+ 212 00ba 05       		.uleb128 0x5
+ 213 00bb 50010000 		.4byte	.LASF20
+ 214 00bf 01       		.byte	0x1
+ 215 00c0 14       		.byte	0x14
+ 216 00c1 00000000 		.4byte	.LFB64
+ 217 00c5 1C000000 		.4byte	.LFE64-.LFB64
+ 218 00c9 01       		.uleb128 0x1
+ 219 00ca 9C       		.byte	0x9c
+ 220 00cb 17010000 		.4byte	0x117
+ 221 00cf 06       		.uleb128 0x6
+ 222 00d0 3B000000 		.4byte	.LASF18
+ 223 00d4 01       		.byte	0x1
+ 224 00d5 16       		.byte	0x16
+ 225 00d6 96000000 		.4byte	0x96
+ 226 00da 00000000 		.4byte	.LLST0
+ 227 00de 07       		.uleb128 0x7
+ 228 00df 0A000000 		.4byte	.LBB2
+ 229 00e3 0C000000 		.4byte	.LBE2-.LBB2
+ 230 00e7 0D010000 		.4byte	0x10d
+ 231 00eb 06       		.uleb128 0x6
+ 232 00ec 4A020000 		.4byte	.LASF19
+ 233 00f0 01       		.byte	0x1
+ 234 00f1 19       		.byte	0x19
+ 235 00f2 96000000 		.4byte	0x96
+ 236 00f6 1E000000 		.4byte	.LLST1
+ 237 00fa 08       		.uleb128 0x8
+ 238 00fb 0E000000 		.4byte	.LVL2
+ 239 00ff 85010000 		.4byte	0x185
+ 240 0103 08       		.uleb128 0x8
+ 241 0104 12000000 		.4byte	.LVL3
+ 242 0108 90010000 		.4byte	0x190
+ 243 010c 00       		.byte	0
+ 244 010d 08       		.uleb128 0x8
+ 245 010e 06000000 		.4byte	.LVL0
+ 246 0112 9B010000 		.4byte	0x19b
+ARM GAS  C:\Users\Malth\AppData\Local\Temp\ccjzx5MJ.s 			page 6
+
+
+ 247 0116 00       		.byte	0
+ 248 0117 09       		.uleb128 0x9
+ 249 0118 E9000000 		.4byte	.LASF29
+ 250 011c 01       		.byte	0x1
+ 251 011d 21       		.byte	0x21
+ 252 011e 00000000 		.4byte	.LFB65
+ 253 0122 10000000 		.4byte	.LFE65-.LFB65
+ 254 0126 01       		.uleb128 0x1
+ 255 0127 9C       		.byte	0x9c
+ 256 0128 51010000 		.4byte	0x151
+ 257 012c 0A       		.uleb128 0xa
+ 258 012d 00000000 		.4byte	.LASF25
+ 259 0131 01       		.byte	0x1
+ 260 0132 22       		.byte	0x22
+ 261 0133 73000000 		.4byte	0x73
+ 262 0137 3D010000 		.4byte	0x13d
+ 263 013b 0B       		.uleb128 0xb
+ 264 013c 00       		.byte	0
+ 265 013d 0C       		.uleb128 0xc
+ 266 013e 08000000 		.4byte	.LVL6
+ 267 0142 A6010000 		.4byte	0x1a6
+ 268 0146 0D       		.uleb128 0xd
+ 269 0147 01       		.uleb128 0x1
+ 270 0148 50       		.byte	0x50
+ 271 0149 05       		.uleb128 0x5
+ 272 014a 03       		.byte	0x3
+ 273 014b 00000000 		.4byte	ISR_UART_rx_handler
+ 274 014f 00       		.byte	0
+ 275 0150 00       		.byte	0
+ 276 0151 05       		.uleb128 0x5
+ 277 0152 16010000 		.4byte	.LASF21
+ 278 0156 01       		.byte	0x1
+ 279 0157 25       		.byte	0x25
+ 280 0158 00000000 		.4byte	.LFB66
+ 281 015c 02000000 		.4byte	.LFE66-.LFB66
+ 282 0160 01       		.uleb128 0x1
+ 283 0161 9C       		.byte	0x9c
+ 284 0162 74010000 		.4byte	0x174
+ 285 0166 0E       		.uleb128 0xe
+ 286 0167 4A020000 		.4byte	.LASF19
+ 287 016b 01       		.byte	0x1
+ 288 016c 25       		.byte	0x25
+ 289 016d 96000000 		.4byte	0x96
+ 290 0171 01       		.uleb128 0x1
+ 291 0172 50       		.byte	0x50
+ 292 0173 00       		.byte	0
+ 293 0174 0F       		.uleb128 0xf
+ 294 0175 29010000 		.4byte	.LASF30
+ 295 0179 05       		.byte	0x5
+ 296 017a 9606     		.2byte	0x696
+ 297 017c 80010000 		.4byte	0x180
+ 298 0180 10       		.uleb128 0x10
+ 299 0181 A1000000 		.4byte	0xa1
+ 300 0185 11       		.uleb128 0x11
+ 301 0186 04010000 		.4byte	.LASF22
+ 302 018a 04010000 		.4byte	.LASF22
+ 303 018e 04       		.byte	0x4
+ARM GAS  C:\Users\Malth\AppData\Local\Temp\ccjzx5MJ.s 			page 7
+
+
+ 304 018f 6F       		.byte	0x6f
+ 305 0190 11       		.uleb128 0x11
+ 306 0191 36010000 		.4byte	.LASF23
+ 307 0195 36010000 		.4byte	.LASF23
+ 308 0199 04       		.byte	0x4
+ 309 019a 88       		.byte	0x88
+ 310 019b 11       		.uleb128 0x11
+ 311 019c 97010000 		.4byte	.LASF24
+ 312 01a0 97010000 		.4byte	.LASF24
+ 313 01a4 04       		.byte	0x4
+ 314 01a5 73       		.byte	0x73
+ 315 01a6 11       		.uleb128 0x11
+ 316 01a7 00000000 		.4byte	.LASF25
+ 317 01ab 00000000 		.4byte	.LASF25
+ 318 01af 01       		.byte	0x1
+ 319 01b0 22       		.byte	0x22
+ 320 01b1 00       		.byte	0
+ 321              		.section	.debug_abbrev,"",%progbits
+ 322              	.Ldebug_abbrev0:
+ 323 0000 01       		.uleb128 0x1
+ 324 0001 11       		.uleb128 0x11
+ 325 0002 01       		.byte	0x1
+ 326 0003 25       		.uleb128 0x25
+ 327 0004 0E       		.uleb128 0xe
+ 328 0005 13       		.uleb128 0x13
+ 329 0006 0B       		.uleb128 0xb
+ 330 0007 03       		.uleb128 0x3
+ 331 0008 0E       		.uleb128 0xe
+ 332 0009 1B       		.uleb128 0x1b
+ 333 000a 0E       		.uleb128 0xe
+ 334 000b 55       		.uleb128 0x55
+ 335 000c 17       		.uleb128 0x17
+ 336 000d 11       		.uleb128 0x11
+ 337 000e 01       		.uleb128 0x1
+ 338 000f 10       		.uleb128 0x10
+ 339 0010 17       		.uleb128 0x17
+ 340 0011 00       		.byte	0
+ 341 0012 00       		.byte	0
+ 342 0013 02       		.uleb128 0x2
+ 343 0014 24       		.uleb128 0x24
+ 344 0015 00       		.byte	0
+ 345 0016 0B       		.uleb128 0xb
+ 346 0017 0B       		.uleb128 0xb
+ 347 0018 3E       		.uleb128 0x3e
+ 348 0019 0B       		.uleb128 0xb
+ 349 001a 03       		.uleb128 0x3
+ 350 001b 0E       		.uleb128 0xe
+ 351 001c 00       		.byte	0
+ 352 001d 00       		.byte	0
+ 353 001e 03       		.uleb128 0x3
+ 354 001f 16       		.uleb128 0x16
+ 355 0020 00       		.byte	0
+ 356 0021 03       		.uleb128 0x3
+ 357 0022 0E       		.uleb128 0xe
+ 358 0023 3A       		.uleb128 0x3a
+ 359 0024 0B       		.uleb128 0xb
+ 360 0025 3B       		.uleb128 0x3b
+ARM GAS  C:\Users\Malth\AppData\Local\Temp\ccjzx5MJ.s 			page 8
+
+
+ 361 0026 0B       		.uleb128 0xb
+ 362 0027 49       		.uleb128 0x49
+ 363 0028 13       		.uleb128 0x13
+ 364 0029 00       		.byte	0
+ 365 002a 00       		.byte	0
+ 366 002b 04       		.uleb128 0x4
+ 367 002c 24       		.uleb128 0x24
+ 368 002d 00       		.byte	0
+ 369 002e 0B       		.uleb128 0xb
+ 370 002f 0B       		.uleb128 0xb
+ 371 0030 3E       		.uleb128 0x3e
+ 372 0031 0B       		.uleb128 0xb
+ 373 0032 03       		.uleb128 0x3
+ 374 0033 08       		.uleb128 0x8
+ 375 0034 00       		.byte	0
+ 376 0035 00       		.byte	0
+ 377 0036 05       		.uleb128 0x5
+ 378 0037 2E       		.uleb128 0x2e
+ 379 0038 01       		.byte	0x1
+ 380 0039 3F       		.uleb128 0x3f
+ 381 003a 19       		.uleb128 0x19
+ 382 003b 03       		.uleb128 0x3
+ 383 003c 0E       		.uleb128 0xe
+ 384 003d 3A       		.uleb128 0x3a
+ 385 003e 0B       		.uleb128 0xb
+ 386 003f 3B       		.uleb128 0x3b
+ 387 0040 0B       		.uleb128 0xb
+ 388 0041 27       		.uleb128 0x27
+ 389 0042 19       		.uleb128 0x19
+ 390 0043 11       		.uleb128 0x11
+ 391 0044 01       		.uleb128 0x1
+ 392 0045 12       		.uleb128 0x12
+ 393 0046 06       		.uleb128 0x6
+ 394 0047 40       		.uleb128 0x40
+ 395 0048 18       		.uleb128 0x18
+ 396 0049 9742     		.uleb128 0x2117
+ 397 004b 19       		.uleb128 0x19
+ 398 004c 01       		.uleb128 0x1
+ 399 004d 13       		.uleb128 0x13
+ 400 004e 00       		.byte	0
+ 401 004f 00       		.byte	0
+ 402 0050 06       		.uleb128 0x6
+ 403 0051 34       		.uleb128 0x34
+ 404 0052 00       		.byte	0
+ 405 0053 03       		.uleb128 0x3
+ 406 0054 0E       		.uleb128 0xe
+ 407 0055 3A       		.uleb128 0x3a
+ 408 0056 0B       		.uleb128 0xb
+ 409 0057 3B       		.uleb128 0x3b
+ 410 0058 0B       		.uleb128 0xb
+ 411 0059 49       		.uleb128 0x49
+ 412 005a 13       		.uleb128 0x13
+ 413 005b 02       		.uleb128 0x2
+ 414 005c 17       		.uleb128 0x17
+ 415 005d 00       		.byte	0
+ 416 005e 00       		.byte	0
+ 417 005f 07       		.uleb128 0x7
+ARM GAS  C:\Users\Malth\AppData\Local\Temp\ccjzx5MJ.s 			page 9
+
+
+ 418 0060 0B       		.uleb128 0xb
+ 419 0061 01       		.byte	0x1
+ 420 0062 11       		.uleb128 0x11
+ 421 0063 01       		.uleb128 0x1
+ 422 0064 12       		.uleb128 0x12
+ 423 0065 06       		.uleb128 0x6
+ 424 0066 01       		.uleb128 0x1
+ 425 0067 13       		.uleb128 0x13
+ 426 0068 00       		.byte	0
+ 427 0069 00       		.byte	0
+ 428 006a 08       		.uleb128 0x8
+ 429 006b 898201   		.uleb128 0x4109
+ 430 006e 00       		.byte	0
+ 431 006f 11       		.uleb128 0x11
+ 432 0070 01       		.uleb128 0x1
+ 433 0071 31       		.uleb128 0x31
+ 434 0072 13       		.uleb128 0x13
+ 435 0073 00       		.byte	0
+ 436 0074 00       		.byte	0
+ 437 0075 09       		.uleb128 0x9
+ 438 0076 2E       		.uleb128 0x2e
+ 439 0077 01       		.byte	0x1
+ 440 0078 3F       		.uleb128 0x3f
+ 441 0079 19       		.uleb128 0x19
+ 442 007a 03       		.uleb128 0x3
+ 443 007b 0E       		.uleb128 0xe
+ 444 007c 3A       		.uleb128 0x3a
+ 445 007d 0B       		.uleb128 0xb
+ 446 007e 3B       		.uleb128 0x3b
+ 447 007f 0B       		.uleb128 0xb
+ 448 0080 11       		.uleb128 0x11
+ 449 0081 01       		.uleb128 0x1
+ 450 0082 12       		.uleb128 0x12
+ 451 0083 06       		.uleb128 0x6
+ 452 0084 40       		.uleb128 0x40
+ 453 0085 18       		.uleb128 0x18
+ 454 0086 9742     		.uleb128 0x2117
+ 455 0088 19       		.uleb128 0x19
+ 456 0089 01       		.uleb128 0x1
+ 457 008a 13       		.uleb128 0x13
+ 458 008b 00       		.byte	0
+ 459 008c 00       		.byte	0
+ 460 008d 0A       		.uleb128 0xa
+ 461 008e 2E       		.uleb128 0x2e
+ 462 008f 01       		.byte	0x1
+ 463 0090 3F       		.uleb128 0x3f
+ 464 0091 19       		.uleb128 0x19
+ 465 0092 03       		.uleb128 0x3
+ 466 0093 0E       		.uleb128 0xe
+ 467 0094 3A       		.uleb128 0x3a
+ 468 0095 0B       		.uleb128 0xb
+ 469 0096 3B       		.uleb128 0x3b
+ 470 0097 0B       		.uleb128 0xb
+ 471 0098 49       		.uleb128 0x49
+ 472 0099 13       		.uleb128 0x13
+ 473 009a 3C       		.uleb128 0x3c
+ 474 009b 19       		.uleb128 0x19
+ARM GAS  C:\Users\Malth\AppData\Local\Temp\ccjzx5MJ.s 			page 10
+
+
+ 475 009c 01       		.uleb128 0x1
+ 476 009d 13       		.uleb128 0x13
+ 477 009e 00       		.byte	0
+ 478 009f 00       		.byte	0
+ 479 00a0 0B       		.uleb128 0xb
+ 480 00a1 18       		.uleb128 0x18
+ 481 00a2 00       		.byte	0
+ 482 00a3 00       		.byte	0
+ 483 00a4 00       		.byte	0
+ 484 00a5 0C       		.uleb128 0xc
+ 485 00a6 898201   		.uleb128 0x4109
+ 486 00a9 01       		.byte	0x1
+ 487 00aa 11       		.uleb128 0x11
+ 488 00ab 01       		.uleb128 0x1
+ 489 00ac 31       		.uleb128 0x31
+ 490 00ad 13       		.uleb128 0x13
+ 491 00ae 00       		.byte	0
+ 492 00af 00       		.byte	0
+ 493 00b0 0D       		.uleb128 0xd
+ 494 00b1 8A8201   		.uleb128 0x410a
+ 495 00b4 00       		.byte	0
+ 496 00b5 02       		.uleb128 0x2
+ 497 00b6 18       		.uleb128 0x18
+ 498 00b7 9142     		.uleb128 0x2111
+ 499 00b9 18       		.uleb128 0x18
+ 500 00ba 00       		.byte	0
+ 501 00bb 00       		.byte	0
+ 502 00bc 0E       		.uleb128 0xe
+ 503 00bd 05       		.uleb128 0x5
+ 504 00be 00       		.byte	0
+ 505 00bf 03       		.uleb128 0x3
+ 506 00c0 0E       		.uleb128 0xe
+ 507 00c1 3A       		.uleb128 0x3a
+ 508 00c2 0B       		.uleb128 0xb
+ 509 00c3 3B       		.uleb128 0x3b
+ 510 00c4 0B       		.uleb128 0xb
+ 511 00c5 49       		.uleb128 0x49
+ 512 00c6 13       		.uleb128 0x13
+ 513 00c7 02       		.uleb128 0x2
+ 514 00c8 18       		.uleb128 0x18
+ 515 00c9 00       		.byte	0
+ 516 00ca 00       		.byte	0
+ 517 00cb 0F       		.uleb128 0xf
+ 518 00cc 34       		.uleb128 0x34
+ 519 00cd 00       		.byte	0
+ 520 00ce 03       		.uleb128 0x3
+ 521 00cf 0E       		.uleb128 0xe
+ 522 00d0 3A       		.uleb128 0x3a
+ 523 00d1 0B       		.uleb128 0xb
+ 524 00d2 3B       		.uleb128 0x3b
+ 525 00d3 05       		.uleb128 0x5
+ 526 00d4 49       		.uleb128 0x49
+ 527 00d5 13       		.uleb128 0x13
+ 528 00d6 3F       		.uleb128 0x3f
+ 529 00d7 19       		.uleb128 0x19
+ 530 00d8 3C       		.uleb128 0x3c
+ 531 00d9 19       		.uleb128 0x19
+ARM GAS  C:\Users\Malth\AppData\Local\Temp\ccjzx5MJ.s 			page 11
+
+
+ 532 00da 00       		.byte	0
+ 533 00db 00       		.byte	0
+ 534 00dc 10       		.uleb128 0x10
+ 535 00dd 35       		.uleb128 0x35
+ 536 00de 00       		.byte	0
+ 537 00df 49       		.uleb128 0x49
+ 538 00e0 13       		.uleb128 0x13
+ 539 00e1 00       		.byte	0
+ 540 00e2 00       		.byte	0
+ 541 00e3 11       		.uleb128 0x11
+ 542 00e4 2E       		.uleb128 0x2e
+ 543 00e5 00       		.byte	0
+ 544 00e6 3F       		.uleb128 0x3f
+ 545 00e7 19       		.uleb128 0x19
+ 546 00e8 3C       		.uleb128 0x3c
+ 547 00e9 19       		.uleb128 0x19
+ 548 00ea 6E       		.uleb128 0x6e
+ 549 00eb 0E       		.uleb128 0xe
+ 550 00ec 03       		.uleb128 0x3
+ 551 00ed 0E       		.uleb128 0xe
+ 552 00ee 3A       		.uleb128 0x3a
+ 553 00ef 0B       		.uleb128 0xb
+ 554 00f0 3B       		.uleb128 0x3b
+ 555 00f1 0B       		.uleb128 0xb
+ 556 00f2 00       		.byte	0
+ 557 00f3 00       		.byte	0
+ 558 00f4 00       		.byte	0
+ 559              		.section	.debug_loc,"",%progbits
+ 560              	.Ldebug_loc0:
+ 561              	.LLST0:
+ 562 0000 08000000 		.4byte	.LVL1
+ 563 0004 14000000 		.4byte	.LVL4
+ 564 0008 0100     		.2byte	0x1
+ 565 000a 54       		.byte	0x54
+ 566 000b 16000000 		.4byte	.LVL5
+ 567 000f 1C000000 		.4byte	.LFE64
+ 568 0013 0100     		.2byte	0x1
+ 569 0015 54       		.byte	0x54
+ 570 0016 00000000 		.4byte	0
+ 571 001a 00000000 		.4byte	0
+ 572              	.LLST1:
+ 573 001e 0E000000 		.4byte	.LVL2
+ 574 0022 11000000 		.4byte	.LVL3-1
+ 575 0026 0100     		.2byte	0x1
+ 576 0028 50       		.byte	0x50
+ 577 0029 00000000 		.4byte	0
+ 578 002d 00000000 		.4byte	0
+ 579              		.section	.debug_aranges,"",%progbits
+ 580 0000 2C000000 		.4byte	0x2c
+ 581 0004 0200     		.2byte	0x2
+ 582 0006 00000000 		.4byte	.Ldebug_info0
+ 583 000a 04       		.byte	0x4
+ 584 000b 00       		.byte	0
+ 585 000c 0000     		.2byte	0
+ 586 000e 0000     		.2byte	0
+ 587 0010 00000000 		.4byte	.LFB64
+ 588 0014 1C000000 		.4byte	.LFE64-.LFB64
+ARM GAS  C:\Users\Malth\AppData\Local\Temp\ccjzx5MJ.s 			page 12
+
+
+ 589 0018 00000000 		.4byte	.LFB65
+ 590 001c 10000000 		.4byte	.LFE65-.LFB65
+ 591 0020 00000000 		.4byte	.LFB66
+ 592 0024 02000000 		.4byte	.LFE66-.LFB66
+ 593 0028 00000000 		.4byte	0
+ 594 002c 00000000 		.4byte	0
+ 595              		.section	.debug_ranges,"",%progbits
+ 596              	.Ldebug_ranges0:
+ 597 0000 00000000 		.4byte	.LFB64
+ 598 0004 1C000000 		.4byte	.LFE64
+ 599 0008 00000000 		.4byte	.LFB65
+ 600 000c 10000000 		.4byte	.LFE65
+ 601 0010 00000000 		.4byte	.LFB66
+ 602 0014 02000000 		.4byte	.LFE66
+ 603 0018 00000000 		.4byte	0
+ 604 001c 00000000 		.4byte	0
+ 605              		.section	.debug_line,"",%progbits
+ 606              	.Ldebug_line0:
+ 607 0000 8A010000 		.section	.debug_str,"MS",%progbits,1
+ 607      02004B01 
+ 607      00000201 
+ 607      FB0E0D00 
+ 607      01010101 
+ 608              	.LASF25:
+ 609 0000 6973725F 		.ascii	"isr_uart_rx_StartEx\000"
+ 609      75617274 
+ 609      5F72785F 
+ 609      53746172 
+ 609      74457800 
+ 610              	.LASF4:
+ 611 0014 5F5F7569 		.ascii	"__uint8_t\000"
+ 611      6E74385F 
+ 611      7400
+ 612              	.LASF5:
+ 613 001e 5F5F696E 		.ascii	"__int32_t\000"
+ 613      7433325F 
+ 613      7400
+ 614              	.LASF3:
+ 615 0028 73686F72 		.ascii	"short unsigned int\000"
+ 615      7420756E 
+ 615      7369676E 
+ 615      65642069 
+ 615      6E7400
+ 616              	.LASF18:
+ 617 003b 62797465 		.ascii	"bytesToRead\000"
+ 617      73546F52 
+ 617      65616400 
+ 618              	.LASF16:
+ 619 0047 666C6F61 		.ascii	"float\000"
+ 619      7400
+ 620              	.LASF1:
+ 621 004d 756E7369 		.ascii	"unsigned char\000"
+ 621      676E6564 
+ 621      20636861 
+ 621      7200
+ 622              	.LASF26:
+ 623 005b 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ARM GAS  C:\Users\Malth\AppData\Local\Temp\ccjzx5MJ.s 			page 13
+
+
+ 623      43313120 
+ 623      352E342E 
+ 623      31203230 
+ 623      31363036 
+ 624 008e 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 624      20726576 
+ 624      6973696F 
+ 624      6E203233 
+ 624      37373135 
+ 625 00c1 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 625      66756E63 
+ 625      74696F6E 
+ 625      2D736563 
+ 625      74696F6E 
+ 626              	.LASF29:
+ 627 00e9 696E6974 		.ascii	"initUART\000"
+ 627      55415254 
+ 627      00
+ 628              	.LASF7:
+ 629 00f2 6C6F6E67 		.ascii	"long unsigned int\000"
+ 629      20756E73 
+ 629      69676E65 
+ 629      6420696E 
+ 629      7400
+ 630              	.LASF22:
+ 631 0104 55415254 		.ascii	"UART_1_ReadRxData\000"
+ 631      5F315F52 
+ 631      65616452 
+ 631      78446174 
+ 631      6100
+ 632              	.LASF21:
+ 633 0116 68616E64 		.ascii	"handleByteReceived\000"
+ 633      6C654279 
+ 633      74655265 
+ 633      63656976 
+ 633      656400
+ 634              	.LASF30:
+ 635 0129 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 635      52784275 
+ 635      66666572 
+ 635      00
+ 636              	.LASF23:
+ 637 0136 55415254 		.ascii	"UART_1_WriteTxData\000"
+ 637      5F315F57 
+ 637      72697465 
+ 637      54784461 
+ 637      746100
+ 638              	.LASF17:
+ 639 0149 646F7562 		.ascii	"double\000"
+ 639      6C6500
+ 640              	.LASF20:
+ 641 0150 4953525F 		.ascii	"ISR_UART_rx_handler\000"
+ 641      55415254 
+ 641      5F72785F 
+ 641      68616E64 
+ 641      6C657200 
+ 642              	.LASF27:
+ARM GAS  C:\Users\Malth\AppData\Local\Temp\ccjzx5MJ.s 			page 14
+
+
+ 643 0164 55415254 		.ascii	"UART.c\000"
+ 643      2E6300
+ 644              	.LASF10:
+ 645 016b 756E7369 		.ascii	"unsigned int\000"
+ 645      676E6564 
+ 645      20696E74 
+ 645      00
+ 646              	.LASF9:
+ 647 0178 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 647      206C6F6E 
+ 647      6720756E 
+ 647      7369676E 
+ 647      65642069 
+ 648              	.LASF14:
+ 649 018f 75696E74 		.ascii	"uint8_t\000"
+ 649      385F7400 
+ 650              	.LASF24:
+ 651 0197 55415254 		.ascii	"UART_1_GetRxBufferSize\000"
+ 651      5F315F47 
+ 651      65745278 
+ 651      42756666 
+ 651      65725369 
+ 652              	.LASF28:
+ 653 01ae 433A5C55 		.ascii	"C:\\Users\\Malth\\Downloads\\TemperatureControlHand"
+ 653      73657273 
+ 653      5C4D616C 
+ 653      74685C44 
+ 653      6F776E6C 
+ 654 01dd 6F75745C 		.ascii	"out\\Temperature-Control.cydsn\000"
+ 654      54656D70 
+ 654      65726174 
+ 654      7572652D 
+ 654      436F6E74 
+ 655              	.LASF15:
+ 656 01fb 696E7433 		.ascii	"int32_t\000"
+ 656      325F7400 
+ 657              	.LASF12:
+ 658 0203 73697A65 		.ascii	"sizetype\000"
+ 658      74797065 
+ 658      00
+ 659              	.LASF8:
+ 660 020c 6C6F6E67 		.ascii	"long long int\000"
+ 660      206C6F6E 
+ 660      6720696E 
+ 660      7400
+ 661              	.LASF13:
+ 662 021a 63686172 		.ascii	"char\000"
+ 662      00
+ 663              	.LASF2:
+ 664 021f 73686F72 		.ascii	"short int\000"
+ 664      7420696E 
+ 664      7400
+ 665              	.LASF6:
+ 666 0229 6C6F6E67 		.ascii	"long int\000"
+ 666      20696E74 
+ 666      00
+ 667              	.LASF11:
+ARM GAS  C:\Users\Malth\AppData\Local\Temp\ccjzx5MJ.s 			page 15
+
+
+ 668 0232 6C6F6E67 		.ascii	"long double\000"
+ 668      20646F75 
+ 668      626C6500 
+ 669              	.LASF0:
+ 670 023e 7369676E 		.ascii	"signed char\000"
+ 670      65642063 
+ 670      68617200 
+ 671              	.LASF19:
+ 672 024a 62797465 		.ascii	"byteReceived\000"
+ 672      52656365 
+ 672      69766564 
+ 672      00
+ 673              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran
